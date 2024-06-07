@@ -1,30 +1,30 @@
-import { Memoir } from "@/widgets/Memoir";
 import { MemoirsPanel } from "@/widgets/MemoirsPanel";
 import { JournalList } from "@/entities/Journal";
 import { Logo } from "@/shared/ui/Logo/Logo";
 import LogoImg from "@/shared/assets/icons/logo.svg";
-import { Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { Journal } from "@/entities/Journal/model/types/journal";
-import { useState } from "react";
+import { useEffect } from "react";
+import { useJournalStore } from "@/entities/Journal/model/store/useJournalStore";
+import { AddJournalButton } from "@/entities/Journal/ui/AddJournalButton/AddJournalButton";
+import cls from "./MainPage.module.scss";
+import { JournalInfo } from "@/entities/Journal/ui/JournalInfo/JournalInfo";
 
 const MainPage = () => {
-  const [data, setData] = useState<Journal[]>([
-    { title: "1", text: "234234", date: new Date() },
-    { title: "2", text: "2sadf34234", date: new Date() },
-    { title: "3", text: "23423asa4", date: new Date() },
-  ]);
+  const getMemoirs = useJournalStore((state) => state.getMemoirs);
+  const items = useJournalStore((state) => state.items);
+  const currentItem = useJournalStore((state) => state.currentMemoir);
+
+  useEffect(() => {
+    getMemoirs();
+  }, []);
 
   return (
-    <section className="mainPage">
+    <section className={cls.mainPage}>
       <MemoirsPanel>
         <Logo image={LogoImg} />
-        <Button type="primary" icon={<PlusOutlined />}>
-          Новое воспоминание
-        </Button>
-        <JournalList items={data} />
+        <AddJournalButton />
+        <JournalList items={items} />
       </MemoirsPanel>
-      <Memoir>asdf</Memoir>
+      <JournalInfo memoir={currentItem} />
     </section>
   );
 };
