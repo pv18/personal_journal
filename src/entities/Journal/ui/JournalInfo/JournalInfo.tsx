@@ -1,26 +1,26 @@
-import cls from './JournalInfo.module.scss';
-import {FC, memo, ReactNode} from 'react';
-import {CalendarOutlined, FolderOutlined, SmileOutlined,} from '@ant-design/icons';
-import {IMemoir} from '../../model/types/journal';
-import dayjs from 'dayjs';
-import {RemoveJournalButton} from '../RemoveJournalButton/RemoveJournalButton';
+import cls from "./JournalInfo.module.scss";
+import { FC, memo, ReactNode } from "react";
+import {
+  CalendarOutlined,
+  FolderOutlined,
+  SmileOutlined,
+} from "@ant-design/icons";
+import dayjs from "dayjs";
+import { RemoveJournalButton } from "../RemoveJournalButton/RemoveJournalButton";
+import { useJournalStore } from "../../model/store/useJournalStore";
 
-interface JournalInfoProps {
-  memoir: IMemoir | undefined;
-}
+export const JournalInfo = () => {
+  const currentItem = useJournalStore((state) => state.currentMemoir);
 
-export const JournalInfo: FC<JournalInfoProps> = memo((props) => {
-  const { memoir } = props;
-
-  const formatedDate = dayjs(memoir?.date).format("YYYY-MM-DD");
+  const formatedDate = dayjs(currentItem?.date).format("YYYY-MM-DD");
 
   return (
     <div className={cls.journalInfo}>
-      {memoir ? (
+      {currentItem ? (
         <>
           <div className={cls.header}>
             <h3 className={cls.title}>
-              {memoir?.title || "Воспоминание не выбрано"}
+              {currentItem?.title || "Воспоминание не выбрано"}
             </h3>
             <div className={cls.actions}>
               <RemoveJournalButton />
@@ -35,10 +35,12 @@ export const JournalInfo: FC<JournalInfoProps> = memo((props) => {
             <Label
               icon={<FolderOutlined />}
               title={"Метки"}
-              content={memoir?.tags}
+              content={currentItem?.tags}
             />
           </div>
-          <div className={cls.description}>{memoir?.description || ""}</div>
+          <div className={cls.description}>
+            {currentItem?.description || ""}
+          </div>
         </>
       ) : (
         <div style={{ textAlign: "center" }}>
@@ -48,7 +50,7 @@ export const JournalInfo: FC<JournalInfoProps> = memo((props) => {
       )}
     </div>
   );
-});
+};
 
 interface LabelProps {
   icon: ReactNode;

@@ -29,7 +29,7 @@ export const JournalForm: FC<JournalFormProps> = (props) => {
         name="description"
         rules={[{ required: true }]}
       >
-        <Input.TextArea rows={4} maxLength={6} />
+        <Input.TextArea rows={4} />
       </Form.Item>
     </Form>
   );
