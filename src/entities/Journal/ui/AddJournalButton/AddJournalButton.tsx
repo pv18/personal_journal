@@ -6,7 +6,7 @@ import { useJournalStore } from "../../model/store/useJournalStore";
 import cls from "./AddJournalButton.module.scss";
 import { JournalForm } from "../JournalForm/JournalForm";
 import dayjs from "dayjs";
-import { generateUniqueId } from "@/shared/helpers/generateUniqueId";
+import { generateUniqueId } from "helpers/generateUniqueId";
 
 export const AddJournalButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -3,6 +3,6 @@ import { IMemoir } from "../types/journal";
 
 export const deleteMemoir = (id: string) => {
   return axios.delete<IMemoir, AxiosResponse<IMemoir>>(
-    `http://localhost:3000/memoirs/${id}`,
+    `http://localhost:3001/memoirs/${id}`,
   );
 };
