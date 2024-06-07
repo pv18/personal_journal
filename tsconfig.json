@@ -21,7 +21,10 @@
     "noFallthroughCasesInSwitch": true,
 
     // Для абсолютного импорта
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
