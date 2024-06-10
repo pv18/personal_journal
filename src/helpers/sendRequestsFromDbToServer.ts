@@ -12,6 +12,9 @@ export const sendRequestsOffline = async () => {
         if (request.method === "post") {
           await axios.post(request.url, { ...request.payload });
         }
+        if (request.method === "delete") {
+          await axios.delete(request.url);
+        }
       } catch (error) {
         console.error(`${error}`);
       }

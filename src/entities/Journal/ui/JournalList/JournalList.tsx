@@ -1,17 +1,14 @@
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 import { JournalItem } from "../JournalItem/JournalItem";
 import classNames from "classnames";
 import cls from "./JournalList.module.scss";
-import { useJournalStore } from "../../model/store/useJournalStore";
+import { IMemoir } from "entities/Journal/model/types/journal";
 
-export const JournalList = () => {
-  const getMemoirs = useJournalStore((state) => state.getMemoirs);
-  const items = useJournalStore((state) => state.items);
+interface JournalListProps {
+  items: IMemoir[];
+}
 
-  useEffect(() => {
-    getMemoirs();
-  }, []);
-
+export const JournalList: FC<JournalListProps> = ({ items }) => {
   return (
     <div className={classNames(cls.journalList)}>
       {items.map((item) => (

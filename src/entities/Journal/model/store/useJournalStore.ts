@@ -4,6 +4,9 @@ import { fetchMemoirs } from "../services/fetchMemoirs";
 import { addMemoir } from "../services/addMemoir";
 import { immer } from "zustand/middleware/immer";
 import { deleteMemoir } from "../../model/services/deleteMemoir";
+import { set as setDB, get as getDB } from "idb-keyval";
+
+const KEY_MEMOIRS_DB = "memoirs";
 
 interface JournalStore {
   isLoading: boolean;
@@ -14,6 +17,10 @@ interface JournalStore {
   currentMemoir?: IMemoir;
   setCurrentMemoir: (id: string) => void;
   deleteMemoir: () => void;
+  syncMemoir: () => void;
+  getMemoirOffline: () => void;
+  addMemoirOffline: (payload: IMemoir, callback?: () => void) => void;
+  deleteMemoirOffline: () => void;
 }
 
 export const useJournalStore = create<JournalStore>()(
@@ -47,6 +54,10 @@ export const useJournalStore = create<JournalStore>()(
       try {
         const { data } = await addMemoir(payload);
         if (data) {
+          await getDB(KEY_MEMOIRS_DB).then((val: IMemoir[]) => {
+            setDB(KEY_MEMOIRS_DB, [...val, data]);
+          });
+
           set({ items: [...get().items, data] });
           callback && callback();
         }
@@ -64,6 +75,13 @@ export const useJournalStore = create<JournalStore>()(
         if (id) {
           const { data } = await deleteMemoir(id);
           if (data) {
+            await getDB(KEY_MEMOIRS_DB).then((val: IMemoir[]) => {
+              setDB(
+                KEY_MEMOIRS_DB,
+                val.filter((item) => item.id !== id),
+              );
+            });
+
             get().getMemoirs();
             set({ currentMemoir: undefined });
           }
@@ -72,6 +90,59 @@ export const useJournalStore = create<JournalStore>()(
         set({ error: e });
       } finally {
         set({ isLoading: false });
+      }
+    },
+    syncMemoir: async () => {
+      set({ isLoading: true });
+      try {
+        const { data } = await fetchMemoirs();
+        if (data) {
+          await setDB("memoirs", data);
+          set({
+            items: data,
+          });
+        }
+      } catch (e) {
+        set({ error: e });
+      } finally {
+        set({ isLoading: false });
+      }
+    },
+    getMemoirOffline: async () => {
+      set({ isLoading: true });
+      try {
+        await getDB(KEY_MEMOIRS_DB).then((val: IMemoir[]) => {
+          set({ items: val });
+        });
+      } catch (e) {
+        set({ error: e });
+      } finally {
+        set({ isLoading: false });
+      }
+    },
+    addMemoirOffline: async (payload, callback) => {
+      await setDB(KEY_MEMOIRS_DB, [...get().items, payload])
+        .then(() => {
+          get().getMemoirOffline();
+          callback && callback();
+        })
+        .catch((err) => {
+          console.log(`${err}`);
+        });
+    },
+    deleteMemoirOffline: async () => {
+      const id = get().currentMemoir?.id;
+      if (id) {
+        await setDB(KEY_MEMOIRS_DB, [
+          ...get().items.filter((item) => item.id !== id),
+        ])
+          .then(() => {
+            get().getMemoirOffline();
+            set({ currentMemoir: undefined });
+          })
+          .catch((err) => {
+            console.log(`${err}`);
+          });
       }
     },
   })),

@@ -1,14 +1,21 @@
-import LogoImg from "app/assets/icons/logo.svg";
 import { AddJournalButton } from "../AddJournalButton/AddJournalButton";
 import cls from "./JournalSideBar.module.scss";
-import { Logo } from "components/Logo/Logo";
 import { JournalList } from "entities/Journal/ui/JournalList/JournalList";
+import { useJournalStore } from "entities/Journal/model/store/useJournalStore";
+import { useEffect } from "react";
 
 export const JournalSideBar = () => {
+  const syncMemoir = useJournalStore((state) => state.syncMemoir);
+  const items = useJournalStore((state) => state.items);
+
+  useEffect(() => {
+    syncMemoir();
+  }, []);
+
   return (
     <div className={cls.journalSideBar}>
       <AddJournalButton />
-      <JournalList />
+      <JournalList items={items} />
     </div>
   );
 };

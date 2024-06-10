@@ -1,16 +1,22 @@
 import { Button, Form, Modal } from "antd";
 import { useState } from "react";
-import { JournalFormType, IMemoir } from "../../model/types/journal";
+import { IMemoir, JournalFormType } from "../../model/types/journal";
 import { PlusOutlined } from "@ant-design/icons";
 import { useJournalStore } from "../../model/store/useJournalStore";
 import cls from "./AddJournalButton.module.scss";
 import { JournalForm } from "../JournalForm/JournalForm";
 import dayjs from "dayjs";
 import { generateUniqueId } from "helpers/generateUniqueId";
+import { useOnline } from "hooks/useOnline";
+import { saveRequestToIndexedDB } from "helpers/saveRequestToIndexedDB";
+import { IRequest } from "app/types/globalTypes";
+import { serverPort } from "entities/Journal/model/constants/serverPort";
 
 export const AddJournalButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const addMemoir = useJournalStore((state) => state.addMemoir);
+  const addMemoirOffline = useJournalStore((state) => state.addMemoirOffline);
+  const isOnline = useOnline();
   const [form] = Form.useForm();
 
   const showModal = () => {
@@ -28,14 +34,30 @@ export const AddJournalButton = () => {
   };
 
   const sendForm = ({ title, date, description, tags }: JournalFormType) => {
+    const memoirId: string = generateUniqueId();
+
     const payload: IMemoir = {
-      id: generateUniqueId(),
+      id: memoirId,
       title: title,
       description: description,
       date: dayjs(date).toISOString(),
       tags: tags,
     };
-    addMemoir(payload, () => handleCancel());
+
+    if (isOnline) {
+      addMemoir(payload, () => handleCancel());
+      return;
+    }
+
+    const requestPayload: IRequest = {
+      id: memoirId,
+      url: `${serverPort}/memoirs`,
+      method: "post",
+      payload: payload,
+    };
+
+    addMemoirOffline(payload, () => handleCancel());
+    return saveRequestToIndexedDB(requestPayload, () => handleCancel());
   };
 
   return (
