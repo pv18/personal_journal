@@ -13,6 +13,8 @@ import { ExpirationPlugin } from "workbox-expiration";
 import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 import { StaleWhileRevalidate } from "workbox-strategies";
+import { CacheableResponsePlugin } from "workbox-cacheable-response";
+import { CacheFirst } from "workbox-strategies";
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -50,7 +52,8 @@ registerRoute(
     // Return true to signal that we want to use the handler.
     return true;
   },
-  createHandlerBoundToURL(process.env.PUBLIC_URL + "/index.html"),
+  // createHandlerBoundToURL(process.env.PUBLIC_URL + "/index.html"),
+  createHandlerBoundToURL(`${process.env.REACT_APP_PUBLIC_URL}/index.html`),
 );
 
 // An example runtime caching route for requests that aren't handled by the
@@ -79,3 +82,39 @@ self.addEventListener("message", (event) => {
 });
 
 // Any other custom service worker logic can go here.
+
+// Записываем гугл-шрифты в кеш с применением стратегии `stale-while-revalidate` с
+// ограничением максимального количества вхождений (записей в кеше)
+registerRoute(
+  ({ url }) =>
+    url.origin === "https://fonts.googleapis.com" ||
+    url.origin === "https://fonts.gstatic.com",
+  new StaleWhileRevalidate({
+    cacheName: "google-fonts",
+    plugins: [new ExpirationPlugin({ maxEntries: 20 })],
+  }),
+);
+
+// Кэширование JS и СSS
+// registerRoute(
+//     ({ request }) =>
+//         request.destination === 'script' || request.destination === 'style',
+//     new StaleWhileRevalidate()
+// )
+
+// Правило для сохранения изображений в кеше, что бы они не переполнят хранилище пользователя:
+// registerRoute(
+//     ({ request }) => request.destination === 'image',
+//     new CacheFirst({
+//         cacheName: 'images2',
+//         plugins: [
+//             new CacheableResponsePlugin({
+//                 statuses: [0, 200]
+//             }),
+//             new ExpirationPlugin({
+//                 maxEntries: 60,
+//                 maxAgeSeconds: 30 * 24 * 60 * 60 // 30 дней
+//             })
+//         ]
+//     })
+// )

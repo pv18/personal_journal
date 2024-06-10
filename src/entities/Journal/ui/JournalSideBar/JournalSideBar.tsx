@@ -7,7 +7,6 @@ import { JournalList } from "entities/Journal/ui/JournalList/JournalList";
 export const JournalSideBar = () => {
   return (
     <div className={cls.journalSideBar}>
-      <Logo image={LogoImg} />
       <AddJournalButton />
       <JournalList />
     </div>

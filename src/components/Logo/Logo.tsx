@@ -1,19 +1,17 @@
 import cls from "./Logo.module.scss";
 import classNames from "classnames";
 import { FC, memo } from "react";
+import LogoImg from "app/assets/icons/logo.svg";
 
 interface LogoProps {
-  image: string;
   className?: string;
 }
 
-export const Logo: FC<LogoProps> = memo((props) => {
-  const { image, className } = props;
-
+export const Logo: FC<LogoProps> = memo(({ className }) => {
   return (
     <img
       className={classNames(cls.logo, className)}
-      src={image}
+      src={LogoImg}
       alt="Логотип журнала"
     />
   );
