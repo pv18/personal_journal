@@ -8,11 +8,14 @@ import {
 import dayjs from "dayjs";
 import { RemoveJournalButton } from "../RemoveJournalButton/RemoveJournalButton";
 import { useJournalStore } from "../../model/store/useJournalStore";
+import { DateFormats } from "enums";
 
 export const JournalInfo = () => {
   const currentItem = useJournalStore((state) => state.currentMemoir);
 
-  const formatedDate = dayjs(currentItem?.date).format("YYYY-MM-DD");
+  const formatedDate = dayjs(currentItem?.date).format(
+    DateFormats.PRIMARY_DATE_FORMAT,
+  );
 
   return (
     <div className={cls.journalInfo}>

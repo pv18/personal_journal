@@ -6,6 +6,8 @@
   padding: 20px;
   transition: background-color 0.2s;
   cursor: pointer;
+  height: 90px;
+  overflow: hidden;
 
   &:hover {
    background: rgba(255, 255, 255, 0.1)
@@ -38,7 +40,9 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  overflow: hidden;
+  overflow: hidden; /* Обрезаем все, что не помещается в область */
+  white-space: nowrap; /* Запрещаем перенос строк */
+  text-overflow: ellipsis;
 }
 
 .journalItem__body {

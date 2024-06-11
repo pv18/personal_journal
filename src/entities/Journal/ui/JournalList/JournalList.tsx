@@ -1,8 +1,8 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { JournalItem } from "../JournalItem/JournalItem";
 import classNames from "classnames";
-import cls from "./JournalList.module.scss";
 import { IMemoir } from "entities/Journal/model/types/journal";
+import cls from "./JournalList.module.scss";
 
 interface JournalListProps {
   items: IMemoir[];

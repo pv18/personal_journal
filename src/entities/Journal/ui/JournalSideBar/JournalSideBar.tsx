@@ -1,12 +1,15 @@
 import { AddJournalButton } from "../AddJournalButton/AddJournalButton";
-import cls from "./JournalSideBar.module.scss";
 import { JournalList } from "entities/Journal/ui/JournalList/JournalList";
 import { useJournalStore } from "entities/Journal/model/store/useJournalStore";
 import { useEffect } from "react";
+import { shallow } from "zustand/shallow";
+import cls from "./JournalSideBar.module.scss";
 
 export const JournalSideBar = () => {
-  const syncMemoir = useJournalStore((state) => state.syncMemoir);
-  const items = useJournalStore((state) => state.items);
+  const [memoirs, syncMemoir] = useJournalStore(
+    (state) => [state.items, state.syncMemoir],
+    shallow,
+  );
 
   useEffect(() => {
     syncMemoir();
@@ -15,7 +18,7 @@ export const JournalSideBar = () => {
   return (
     <div className={cls.journalSideBar}>
       <AddJournalButton />
-      <JournalList items={items} />
+      <JournalList items={memoirs} />
     </div>
   );
 };

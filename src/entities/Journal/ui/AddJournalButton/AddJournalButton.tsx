@@ -7,17 +7,20 @@ import cls from "./AddJournalButton.module.scss";
 import { JournalForm } from "../JournalForm/JournalForm";
 import dayjs from "dayjs";
 import { generateUniqueId } from "helpers/generateUniqueId";
-import { useOnline } from "hooks/useOnline";
+import { useOnline } from "hooks";
 import { saveRequestToIndexedDB } from "helpers/saveRequestToIndexedDB";
 import { IRequest } from "app/types/globalTypes";
 import { serverPort } from "entities/Journal/model/constants/serverPort";
+import { shallow } from "zustand/shallow";
 
 export const AddJournalButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const addMemoir = useJournalStore((state) => state.addMemoir);
-  const addMemoirOffline = useJournalStore((state) => state.addMemoirOffline);
   const isOnline = useOnline();
   const [form] = Form.useForm();
+  const [addMemoir, addMemoirOffline] = useJournalStore(
+    (state) => [state.addMemoir, state.addMemoirOffline],
+    shallow,
+  );
 
   const showModal = () => {
     form.resetFields();

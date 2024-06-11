@@ -6,6 +6,8 @@ import { EyeOutlined } from "@ant-design/icons";
 import { useJournalStore } from "../../model/store/useJournalStore";
 import { IMemoir } from "../../model/types/journal";
 import classNames from "classnames";
+import { shallow } from "zustand/shallow";
+import { DateFormats } from "enums";
 
 interface JournalItemProps {
   memoir: IMemoir;
@@ -15,14 +17,17 @@ export const JournalItem: FC<JournalItemProps> = (props) => {
   const {
     memoir: { title, date, description, id },
   } = props;
-  const chooseMemoir = useJournalStore((state) => state.setCurrentMemoir);
-  const currentMemoir = useJournalStore((state) => state.currentMemoir);
+
+  const [currentMemoir, chooseMemoir] = useJournalStore(
+    (state) => [state.currentMemoir, state.setCurrentMemoir],
+    shallow,
+  );
 
   const onChooseMemoir = () => {
     chooseMemoir(id);
   };
 
-  const formatedDate = dayjs(date).format("YYYY-MM-DD");
+  const formatedDate = dayjs(date).format(DateFormats.PRIMARY_DATE_FORMAT);
 
   return (
     <div
@@ -32,7 +37,7 @@ export const JournalItem: FC<JournalItemProps> = (props) => {
     >
       <h2 className={cls.journalItem__header}>{title}</h2>
       <h2 className={cls.journalItem__body}>
-        <div className={cls.journalItem__date}>{formatedDate}</div>
+        <div className={cls.journalItem__date}>{`${formatedDate} :`}</div>
         <div className={cls.journalItem__text}>{description}</div>
       </h2>
       <div className={cls.btnWrapper}>
