@@ -1,4 +1,4 @@
-![preview](https://github.com/pv18/personal_journal/tree/master/public/img/preview.png)
+![preview](https://github.com/pv18/personal_journal/blob/master/public/img/preview.png)
 # Personal Journal
 
 ## Содержание
