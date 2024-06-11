@@ -1,4 +1,4 @@
-![preview](https://github.com/pv18/list_of_countries/blob/master/public/img/preview.png)
+![preview](https://github.com/pv18/personal_journal/tree/master/public/img/preview.png)
 # Personal Journal
 
 ## Содержание
@@ -6,7 +6,6 @@
 - [Описание](#Project_Description)
 - [Технологии](#Technologies)
 - [Запуск проекта](#Launch_of_the_project)
-- [Автор](#Authors)
 
 ### <a name="Project_Description">Описание</a>
 
@@ -14,12 +13,12 @@
 
 ### <a name="Technologies">Технлогии</a>
 
-- **React**,
-- **TypeScript**,
-- **AntD**,
-- **JSON-Server**,
-- **PWA**,
-- **IndexedDB**,
+- **React**
+- **TypeScript**
+- **AntD**
+- **JSON-Server**
+- **PWA**
+- **IndexedDB**
 
 ### <a name="Launch_of_the_project">Запуск проекта</a>
 
@@ -35,8 +34,4 @@
   npm start:dev:server
 ```
 
-### <a name="Authors">Authors</a>
 
-```
- Павел Васильев
-```
