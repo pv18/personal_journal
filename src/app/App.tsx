@@ -1,4 +1,4 @@
-import {Suspense, useEffect, useState} from 'react';
+import { Suspense, useEffect, useState } from "react";
 import { MainPage } from "../pages/MainPage";
 import { Navbar } from "components/Navbar/Navbar";
 import { Spin } from "antd";
@@ -8,27 +8,27 @@ import "./styles/index.scss";
 
 function App() {
   // Имитация запроса на сервер
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const isOnline = useOnline();
 
   useEffect(() => {
     if (isOnline) {
       const send = async () => {
-        setLoading(true)
+        setLoading(true);
         try {
           await sendRequestsOffline();
         } catch (e) {
-          console.log(`${e}`)
+          console.log(`${e}`);
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
-      }
-      send()
+      };
+      send();
     }
   }, [isOnline]);
 
   return (
-    <Spin spinning={loading} size={'large'} tip={'Идет синхронизация'}>
+    <Spin spinning={loading} size={"large"} tip={"Идет синхронизация"}>
       <div className="app">
         <Navbar />
         <div className="main">
